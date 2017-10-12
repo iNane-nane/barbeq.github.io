@@ -1,7 +1,7 @@
 'use strict';
 
 var swipeBody = new Hammer.Manager(document.body, {}),
-    swipeTopbar = new Hammer.Manager(document.getElementById('topbar'), {touchAction: 'auto'});
+    swipeTopbar = new Hammer.Manager(document.getElementById('topbar'), { inputClass: Hammer.TouchInput });
 
 swipeBody.add( new Hammer.Pan({ direction: Hammer.DIRECTION_ALL, threshold: 0}) );
 swipeTopbar.add( new Hammer.Pan({ direction: Hammer.DIRECTION_HORIZONTAL, threshold: 0}) );
