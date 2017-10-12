@@ -1,0 +1,54 @@
+body {
+    margin: 0;
+    height: 100vh;
+    position: relative;
+    overflow: hidden;
+}
+
+* {
+    font-family: 'Exo 2', sans-serif;
+}
+
+.topbar {
+    background-color: #40434f;
+    display: inline-flex;
+    width: 100%;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    position: fixed;
+    top: 0;
+}
+
+.menu-level-1-container {
+    position: absolute;
+    right: -20px;
+    left: 0;
+    overflow-y: scroll;
+    height: 100vh;
+    padding-top: 58px;
+    box-sizing: border-box;
+}
+
+.menu-level-1 {
+    flex-grow: 1;
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+    cursor: pointer;
+}
+.menu-level-1:hover {
+    background-color: #ffbc70;
+    color: #40434f;
+    font-weight: 600;
+}
+
+@media (max-width: 768px) {
+    .topbar {
+        height: 100%;
+        width: 80%;
+        overflow: hidden;
+    }
+    .menu-level-1 {
+        width: calc(100% - 20px);
+    }
+}
