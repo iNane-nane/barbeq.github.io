@@ -1,10 +1,10 @@
 'use strict';
 
-var swipeBody = new Hammer(document.body);
+var swipeBody = new Hammer.Manager(document.body, {});
+
+swipeBody.add( new Hammer.Pan({ direction: Hammer.DIRECTION_ALL, threshold: 0}) );
 
 swipeBody.on('panend', function(e) {
-    // $('.topbar').toggle();
-    console.log(e)
     if (e.additionalEvent === 'panright') {
         $('.topbar').animate({
             position: 'static',
@@ -50,5 +50,3 @@ var menuJSON = {
         name: 'ВАТС'
     }
 };
-
-console.log(menuJSON);
