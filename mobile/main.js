@@ -19,7 +19,7 @@ swipeBody.on('panend', function(e) {
         $('.topbar').animate({
             position: 'static',
             left: '0'
-        }, 500);
+        }, 200);
     }
 });
 
@@ -29,7 +29,7 @@ swipeTopbar.on('panend', function (e) {
         $('.topbar').animate({
             position: 'absolute',
             left: '-100%'
-        }, 500);
+        }, 200);
     }
 });
 
