@@ -1,0 +1,42 @@
+@import 'healthyBar.css';
+@import 'warningArea.css';
+@import 'criticalArea.css';
+@import 'backgroundCards.css';
+@import 'foregroundCards.css';
+@import 'problematicItems.css';
+
+body {
+    height: 100vh;
+    width: 100vh;
+    margin: 0;
+    overflow: hidden;
+    background-color: #33343a;
+}
+
+* {
+    font-family: 'Exo 2', sans-serif;
+}
+
+.cards-area {
+    display: inline-block;
+    width: calc(100% - 101px);
+    position: fixed;
+    left: 102px;
+    top: 0;
+    height: 100vh;
+    box-sizing: border-box;
+}
+
+/*========== runtime colon pulse ==========*/
+@keyframes timePulse {
+    0% {opacity: 1}
+    49% {opacity: 1}
+    50% {opacity: 0}
+    99% {opacity: 0}
+    100% {opacity: 1}
+}
+
+
+
+/*------------------------------------------------*/
+

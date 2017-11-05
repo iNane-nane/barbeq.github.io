@@ -1,0 +1,19 @@
+.background-cards {
+    position: absolute;
+    right: 10px;
+    left: 10px;
+    top: 60px;
+    bottom: 10px;
+    transform: scale(.8, .8);
+}
+
+.background-cards .card {
+    color: rgba(255, 255, 255, 0.5);
+    box-shadow: none;
+    position: absolute;
+    text-shadow: none;
+}
+
+.background-cards .card:before {
+    border-bottom: 50px solid rgba(51, 52, 58, 0.31);
+}
