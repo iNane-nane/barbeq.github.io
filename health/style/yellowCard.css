@@ -69,3 +69,7 @@
     position: relative;
     top: -2px;
 }
+
+.foreground-cards .yellow-card {
+    background-color: rgba(66, 66, 66, 0.69);
+}

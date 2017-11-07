@@ -195,10 +195,10 @@ var renderProblematicItems = function (card) {
   }
   /////////////
 
-  // console.log(displayObject);
+  console.log(displayObject);
   tempIterator = 0;
 
-  setInterval(function () {
+  var problematicItemsCarousel = function () {
 
     setTimeout(function () {
       displayArea.fadeOut();
@@ -218,7 +218,10 @@ var renderProblematicItems = function (card) {
       tempIterator = 0;
     }
 
-  }, 3000);
+  };
+
+  problematicItemsCarousel();
+  setInterval(problematicItemsCarousel, 3000);
 
 };
 
@@ -228,14 +231,52 @@ $.each($('.foreground-cards .card'), function (i, val) {
 });
 
 
-//11
-var cardIn = function () {
+// cards slide functions
+var cardIn = function (card, pastCard) {
+
+      pastCard.addClass('card-in');
+      $('.warning-area .background-cards').prepend(pastCard);
+
+      setTimeout(function () {
+        displayBackgroundCards();
+        pastCard.removeClass('card-in');
+      }, 200);
+
+      card.attr('style', '').addClass('card-in');
+      $('.warning-area .foreground-cards').append(card);
+      renderProblematicItems(card);
+
+      // setTimeout, getting rid of browser css optimizing during reflow
+      // 100 === 400ms from slideUp - .3s from css
+      setTimeout(function () {
+        card.removeClass('card-in');
+      }, 100);
 
     },
     cardOut = function (card) {
-        $(card).addClass('card-out');
 
-        $(card).slideUp();
+      var pastCard = card.clone();
 
+      card.addClass('card-out');
+
+      card.slideUp(400, function () {
+        card.detach();
+        card.removeClass('card-out');
+      });
+
+      var newCard = $('.warning-area .background-cards').children().last().clone();
+
+      setTimeout(function () {
+        $('.warning-area .background-cards').children().last().detach().removeClass('card-out');
+      }, 200);
+      $('.warning-area .background-cards').children().last().addClass('card-out');
+
+      cardIn(newCard, pastCard);
 
     };
+
+setInterval(function () {
+  var card = $('.warning-area .foreground-cards').children().first();
+
+  cardOut($(card));
+}, 600);

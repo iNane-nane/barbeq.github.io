@@ -1,7 +1,7 @@
 .foreground-cards {
     height: 100%;
     /*display: none;*/
-    visibility: hidden;
+    /*visibility: hidden;*/
 }
 
 .foreground-cards .card {
@@ -11,4 +11,8 @@
 
 .foreground-cards .card-out {
     top: -100%;
+}
+
+.foreground-cards .card-in {
+    top: 200%;
 }

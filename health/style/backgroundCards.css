@@ -12,8 +12,17 @@
     box-shadow: none;
     position: absolute;
     text-shadow: none;
+    transition: top .2s linear, left .2s linear, right .2s linear;
 }
 
 .background-cards .card:before {
     border-bottom: 50px solid rgba(51, 52, 58, 0.31);
+}
+
+.background-cards .card-out {
+    top: 200% !important;
+}
+
+.background-cards .card-in {
+    top: -100% !important;
 }
