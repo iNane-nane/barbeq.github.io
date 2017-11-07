@@ -226,3 +226,16 @@ displayBackgroundCards();
 $.each($('.foreground-cards .card'), function (i, val) {
   renderProblematicItems($(val));
 });
+
+
+//11
+var cardIn = function () {
+
+    },
+    cardOut = function (card) {
+        $(card).addClass('card-out');
+
+        $(card).slideUp();
+
+
+    };

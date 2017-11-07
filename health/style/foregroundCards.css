@@ -3,3 +3,12 @@
     /*display: none;*/
     visibility: hidden;
 }
+
+.foreground-cards .card {
+    transition: top .3s linear;
+    top: 0;
+}
+
+.foreground-cards .card-out {
+    top: -100%;
+}
