@@ -1,7 +1,7 @@
 .foreground-cards {
     height: 100%;
     /*display: none;*/
-    /*visibility: hidden;*/
+    visibility: hidden;
 }
 
 .foreground-cards .card {

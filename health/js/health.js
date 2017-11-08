@@ -133,6 +133,8 @@ var displayBackgroundCards = function () {
 
       } else {
 
+        console.log(cardsNumber)
+
         $(val).css({
           top: i * cardOffset + 'px',
           filter: 'blur(' + (cardsNumber - i) + 'px)'
@@ -150,11 +152,10 @@ var displayBackgroundCards = function () {
 var renderProblematicItems = function (card) {
 
   var problematicArea = card.find('.problematic-items'),
-      problematicItemsArray = problematicArea.children().toArray().reverse(),
+      problematicItemsArray = problematicArea.children().clone().toArray().reverse(),
       displayArea = card.find('.problematic-items-display'),
       displayAreaHeight = card.height(),
-      displayObject = [],
-      i = 0;
+      displayObject = [];
 
   /////////////
   var tempArray = [],
@@ -163,9 +164,8 @@ var renderProblematicItems = function (card) {
 
   // grouping items for display inside card, based on available height
   while (problematicItemsArray.length > 0) {
-    // console.log(problematicItemsArray.length+ ' '+tempHeight+ ' '+tempArray)
 
-    var localItem = $(problematicItemsArray.slice(-1)),
+    var localItem = $(problematicArea.children().toArray().reverse()[problematicItemsArray.length - 1]),
         addToObject = function (id, data) {
           displayObject.push({
             id: id,
@@ -194,39 +194,52 @@ var renderProblematicItems = function (card) {
     addToObject(tempIterator, tempArray);
   }
   /////////////
-
-  console.log(displayObject);
   tempIterator = 0;
 
   var problematicItemsCarousel = function () {
 
-    setTimeout(function () {
-      displayArea.fadeOut();
-    }, 2500);
+    if (!card.parent().length || card.parent().hasClass('background-cards') || displayObject.length < 2 ) {
 
-    displayArea.html(displayObject[tempIterator].data);
+      displayArea.css({
+        top: '50%',
+        'margin-top': '-' + (displayObject[0].height / 2) + 'px',
+        display: 'block'
+      });
 
-    displayArea.css({
-      top: '50%',
-      'margin-top': '-' + (displayObject[tempIterator].height / 2) + 'px',
-    });
+      displayArea.html(displayObject[0].data);
 
-    displayArea.fadeIn();
+      clearInterval(interval);
 
-    tempIterator++;
-    if (tempIterator === displayObject.length) {
-      tempIterator = 0;
+    } else {
+
+      setTimeout(function () {
+        displayArea.fadeOut();
+      }, 2500);
+
+      displayArea.html(displayObject[tempIterator].data);
+
+      displayArea.css({
+        top: '50%',
+        'margin-top': '-' + (displayObject[tempIterator].height / 2) + 'px'
+      });
+
+      displayArea.fadeIn();
+
+      tempIterator++;
+      if (tempIterator === displayObject.length) {
+        tempIterator = 0;
+      }
     }
 
   };
 
-  problematicItemsCarousel();
-  setInterval(problematicItemsCarousel, 3000);
+  problematicItemsCarousel(); // first run goes idle for background cards, because of no interval specified to clear
+  var interval = setInterval(problematicItemsCarousel, 3000);
 
 };
 
 displayBackgroundCards();
-$.each($('.foreground-cards .card'), function (i, val) {
+$.each($('.card'), function (i, val) {
   renderProblematicItems($(val));
 });
 
@@ -237,19 +250,29 @@ var cardIn = function (card, pastCard) {
       pastCard.addClass('card-in');
       $('.warning-area .background-cards').prepend(pastCard);
 
+      pastCard.find('.problematic-items-display').css({
+        opacity: 1
+      });
+
       setTimeout(function () {
+
         displayBackgroundCards();
+
+        renderProblematicItems(pastCard);
         pastCard.removeClass('card-in');
+
       }, 200);
 
       card.attr('style', '').addClass('card-in');
       $('.warning-area .foreground-cards').append(card);
-      renderProblematicItems(card);
 
       // setTimeout, getting rid of browser css optimizing during reflow
       // 100 === 400ms from slideUp - .3s from css
       setTimeout(function () {
+
+        renderProblematicItems(card);
         card.removeClass('card-in');
+
       }, 100);
 
     },
@@ -279,4 +302,4 @@ setInterval(function () {
   var card = $('.warning-area .foreground-cards').children().first();
 
   cardOut($(card));
-}, 600);
+}, 6000);
