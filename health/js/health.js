@@ -1,5 +1,17 @@
 'use strict';
 
+// --- dev helpers
+
+$(document).on('keypress', function (e) {
+  var keyPressed = e.which || e.keyCode || 0;
+
+  if (keyPressed === 102) {
+    $('.foreground-cards').toggleClass('fg-hidden');
+  }
+});
+
+// --- dev helpers
+
 var healthyCarousel = function () {
 
   var nodesArray = itemsContainer.children().toArray().reverse(),
@@ -46,11 +58,23 @@ var healthyCarousel = function () {
 
   var interval = setInterval(carousel, 30);
 
-  $('.healthy-bar').on('mouseover', function () {
+  $('.healthy-bar').one('mouseover', function () {
     clearInterval(interval);
+    console.log(1)
+    $(document).on('scroll', function (e) {
+      console.log(e);
+    })
   });
   $('.healthy-bar').on('mouseleave', function () {
+    console.log(2)
     interval = setInterval(carousel, 30);
+    $('.healthy-bar').one('mouseover', function () {
+      clearInterval(interval);
+      console.log(1)
+      $(document).on('scroll', function (e) {
+        console.log(e);
+      })
+    });
   });
 
 };
@@ -247,33 +271,39 @@ $.each($('.card'), function (i, val) {
 // cards slide functions
 var cardIn = function (card, pastCard) {
 
-      pastCard.addClass('card-in');
-      $('.warning-area .background-cards').prepend(pastCard);
+      // from foreground to background
+      if (pastCard) {
+        pastCard.addClass('card-in');
+        $('.warning-area .background-cards').prepend(pastCard);
 
-      pastCard.find('.problematic-items-display').css({
-        opacity: 1
-      });
+        pastCard.find('.problematic-items-display').css({
+          opacity: 1
+        });
 
-      setTimeout(function () {
+        setTimeout(function () {
 
-        displayBackgroundCards();
+          displayBackgroundCards();
 
-        renderProblematicItems(pastCard);
-        pastCard.removeClass('card-in');
+          renderProblematicItems(pastCard);
+          pastCard.removeClass('card-in');
 
-      }, 200);
+        }, 200);
+      }
 
-      card.attr('style', '').addClass('card-in');
-      $('.warning-area .foreground-cards').append(card);
+      // from background to foreground
+      if (card) {
+        card.attr('style', '').addClass('card-in');
+        $('.warning-area .foreground-cards').append(card);
 
-      // setTimeout, getting rid of browser css optimizing during reflow
-      // 100 === 400ms from slideUp - .3s from css
-      setTimeout(function () {
+        // setTimeout, getting rid of browser css optimizing during reflow
+        // 100 === 400ms from slideUp - .3s from css
+        setTimeout(function () {
 
-        renderProblematicItems(card);
-        card.removeClass('card-in');
+          renderProblematicItems(card);
+          card.removeClass('card-in');
 
-      }, 100);
+        }, 100);
+      }
 
     },
     cardOut = function (card) {
@@ -282,19 +312,29 @@ var cardIn = function (card, pastCard) {
 
       card.addClass('card-out');
 
-      card.slideUp(400, function () {
-        card.detach();
-        card.removeClass('card-out');
-      });
+      if (!newCardFlag) {
+        card.slideUp(400, function () {
+          card.detach();
+          card.removeClass('card-out');
+        });
 
-      var newCard = $('.warning-area .background-cards').children().last().clone();
+        var newCard = $('.warning-area .background-cards').children().last().clone();
 
-      setTimeout(function () {
-        $('.warning-area .background-cards').children().last().detach().removeClass('card-out');
-      }, 200);
-      $('.warning-area .background-cards').children().last().addClass('card-out');
+        setTimeout(function () {
+          $('.warning-area .background-cards').children().last().detach().removeClass('card-out');
+        }, 200);
+        $('.warning-area .background-cards').children().last().addClass('card-out');
 
-      cardIn(newCard, pastCard);
+        cardIn(newCard, pastCard);
+      } else {
+        setTimeout(function () {
+          card.detach();
+          card.removeClass('card-out');
+          addCard(cardTemplate);
+        }, 400);
+        newCardFlag--;
+        cardIn(null, pastCard);
+      }
 
     };
 
@@ -303,3 +343,54 @@ setInterval(function () {
 
   cardOut($(card));
 }, 6000);
+
+///////////////////////////////////////////////////////////////////
+// adding new card
+
+var cardTemplate = '<div class="red-card card" id="card1">\n' +
+    '                <div class="ill-item-before-diagonal-line"></div>\n' +
+    '                <div class="ill-item-before-horizontal-line"></div>\n' +
+    '                <span class="node-title" style="font-size: 21px; ">reg101.mcntelecom.ru</span>\n' +
+    '                <div class="node-header-info">\n' +
+    '                    <span class="runtime">runtime: <span class="hours">00</span><span class="time-pulse">:</span><span class="minutes">25</span></span> | <span>calls: 5134</span>\n' +
+    '                </div>\n' +
+    '                <div class="problematic-items">\n' +
+    '                    <div class="problematic-item">\n' +
+    '                        <span class="item-name">ApihostRadiusStatus</span>\n' +
+    '                        <br>\n' +
+    '                        <span class="message" title="Apihost received RADIUS request 0 seconds ago from server_id:99">Apihost received RADIUS request 0 seconds ago from server_id:99</span>\n' +
+    '                    </div>\n' +
+    '                    <div class="problematic-item">\n' +
+    '                        <span class="item-name">CallSyncStatus</span>\n' +
+    '                        <br>\n' +
+    '                        <span class="message" title="Delay is 2370 sec">Delay is 2370 sec</span>\n' +
+    '                    </div>\n' +
+    '                    <div class="problematic-item">\n' +
+    '                        <span class="item-name">publicApiWorks</span>\n' +
+    '                        <br>\n' +
+    '                        <span class="message" title="Public API NOT AVAILABLE">Public API NOT AVAILABLE</span>\n' +
+    '                    </div>\n' +
+    '                    <div class="problematic-item">\n' +
+    '                        <span class="item-name">ApihostRadiusStatus</span>\n' +
+    '                        <br>\n' +
+    '                        <span class="message" title="Apihost received RADIUS request 0 seconds ago from server_id:99">Apihost received RADIUS request 0 seconds ago from server_id:99</span>\n' +
+    '                    </div>\n' +
+    '                    <div class="problematic-item">\n' +
+    '                        <span class="item-name">CallSyncStatus</span>\n' +
+    '                        <br>\n' +
+    '                        <span class="message" title="Delay is 2370 sec">Delay is 2370 sec</span>\n' +
+    '                    </div>\n' +
+    '                    <div class="problematic-item">\n' +
+    '                        <span class="item-name">publicApiWorks</span>\n' +
+    '                        <br>\n' +
+    '                        <span class="message" title="Public API NOT AVAILABLE">Public API NOT AVAILABLE</span>\n' +
+    '                    </div>\n' +
+    '                </div>\n' +
+    '                <div class="problematic-items-display"></div>\n' +
+    '            </div>';
+
+var newCardFlag = 0;
+
+var addCard = function (card) {
+  $('.warning-area .foreground-cards').prepend(card);
+};

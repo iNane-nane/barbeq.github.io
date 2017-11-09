@@ -1,6 +1,8 @@
 .foreground-cards {
     height: 100%;
-    /*display: none;*/
+}
+
+.foreground-cards.fg-hidden {
     visibility: hidden;
 }
 

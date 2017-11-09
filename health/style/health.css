@@ -20,6 +20,7 @@ body {
 .cards-area {
     display: inline-block;
     width: calc(100% - 101px);
+    max-width: 900px;
     position: fixed;
     left: 102px;
     top: 0;
