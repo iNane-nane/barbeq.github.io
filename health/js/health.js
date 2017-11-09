@@ -133,11 +133,11 @@ var displayBackgroundCards = function () {
 
       } else {
 
-        console.log(cardsNumber)
-
         $(val).css({
           top: i * cardOffset + 'px',
-          filter: 'blur(' + (cardsNumber - i) + 'px)'
+          filter: 'blur(' + (cardsNumber - i) + 'px)',
+          left: 0,
+          right: 0
         });
 
       }
