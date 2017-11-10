@@ -17,10 +17,12 @@ var healthyCarousel = function () {
   var nodesArray = itemsContainer.children().toArray().reverse(),
       fullItemHeight = itemHeight + itemMargin * 2,
       j = 0,
-      carousel = function () {
+      carousel = function (negativeDirection) {
 
         var currentOffset = +(itemsContainer.css('height').slice(0, -2)),
-            newOffset = currentOffset + 1;
+            newOffset = currentOffset + 1 + (-2) * negativeDirection *0;
+
+        // console.log(newOffset)
 
         itemsContainer.css('height', '' + newOffset + 'px');
 
@@ -30,23 +32,47 @@ var healthyCarousel = function () {
           // Todo: РАЗОБРАТЬСЯ С ХРАНЕНИЕМ ЭЛЕМЕНТОВ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
           // Todo: РАЗОБРАТЬСЯ С ХРАНЕНИЕМ ЭЛЕМЕНТОВ !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-          if (j > 0) {
+          // console.log(nodesArray)
+          if (negativeDirection) {
+            j--;
+            if (j < 1) j += itemsNumber; // erase counter to prevent huge numbers
+          }
 
-            itemsContainer.prepend($(nodesArray[j % itemsNumber]).clone());
+          if (j !== 0) {
 
-            itemsContainer.children().last().remove();
+            if (negativeDirection) {
+              itemsContainer.append($(nodesArray[(j - 1) % itemsNumber]).clone());
 
-            itemsContainer.css('height', '' + (newOffset - fullItemHeight) + 'px');
+              itemsContainer.children().first().remove();
+
+              itemsContainer.css('height', '' + (newOffset - fullItemHeight) + 'px');
+            } else {
+              itemsContainer.prepend($(nodesArray[j % itemsNumber]).clone());
+
+              itemsContainer.children().last().remove();
+
+              itemsContainer.css('height', '' + (newOffset - fullItemHeight) + 'px');
+            }
 
           } else {
-            // prepending last node at the beginning in the first cycle
-            itemsContainer.prepend($(nodesArray[0]).clone());
+
+            if (negativeDirection) {
+              // appending first node at the end in the first cycle
+              itemsContainer.append($(nodesArray[itemsNumber - 1]).clone());
+            } else {
+              // prepending last node at the beginning in the first cycle
+              itemsContainer.prepend($(nodesArray[0]).clone());
+            }
 
           }
 
-          j++;
+          console.log(j)
+          if (!negativeDirection) {
+            j++;
+            if (j % itemsNumber === 1) j = 1; // erase counter to prevent huge numbers
+          }
 
-          if (j % itemsNumber === 1) j = 1; // erase counter to prevent huge numbers
+
         }
 
       };
@@ -56,25 +82,56 @@ var healthyCarousel = function () {
     top: '-' + (fullItemHeight) + 'px'
   });
 
-  var interval = setInterval(carousel, 30);
+  // var interval = setInterval(carousel, 30);
 
   $('.healthy-bar').one('mouseover', function () {
-    clearInterval(interval);
-    console.log(1)
-    $(document).on('scroll', function (e) {
-      console.log(e);
+    // clearInterval(interval);
+    // console.log(1)
+    $('.healthy-bar').on('wheel', function (e) {
+      // console.log(e.originalEvent.deltaY);
+      var delta = e.originalEvent.deltaY,
+          i = 0;
+
+      if (delta > 0) {
+        // scroll down
+        itemsContainer.css({
+          'justify-content': 'flex-end',
+          top: '-' + (fullItemHeight) + 'px',
+          bottom: 'auto'
+        });
+        for (i = 0; i < 5; i++) {
+          carousel(false);
+        }
+
+      } else {
+        // scroll up
+        itemsContainer.css({
+          'justify-content': 'flex-start',
+          top: 'auto',
+          bottom: '-' + (fullItemHeight) + 'px'
+        });
+        for (i = 0; i < 5; i++) {
+          carousel(true);
+        }
+
+      }
+
     })
+    // document.getElementsByClassName('healthy-bar')[0].addEventListener('wheel', function (e) {
+    //   console.log(e);
+    // })
   });
   $('.healthy-bar').on('mouseleave', function () {
-    console.log(2)
-    interval = setInterval(carousel, 30);
-    $('.healthy-bar').one('mouseover', function () {
-      clearInterval(interval);
-      console.log(1)
-      $(document).on('scroll', function (e) {
-        console.log(e);
-      })
-    });
+    // $('.healthy-bar').off('wheel');
+    // console.log(2)
+    // interval = setInterval(carousel, 30);
+    // $('.healthy-bar').one('mouseover', function () {
+    //   // clearInterval(interval);
+    //   // console.log(1)
+    //   $('.healthy-bar').on('wheel', function (e) {
+    //     // console.log(e);
+    //   })
+    // });
   });
 
 };
