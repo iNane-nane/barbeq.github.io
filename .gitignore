@@ -1,1 +1,4 @@
 .idea
+**/node_modules
+health/dist
+health/healthMonitorMobile

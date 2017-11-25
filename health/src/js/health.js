@@ -1,5 +1,9 @@
 'use strict';
 
+// render elements with reactjs
+require('./healthyBar.js');
+require('./nodeCard.jsx');
+
 // --- dev helpers
 
 $(document).on('keypress', function (e) {

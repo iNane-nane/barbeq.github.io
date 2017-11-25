@@ -37,6 +37,11 @@ body {
     100% {opacity: 1}
 }
 
+/* NOT YET OUTGROUPED */
+.node-title {
+    font-size: 21px;
+}
+
 
 
 /*------------------------------------------------*/
